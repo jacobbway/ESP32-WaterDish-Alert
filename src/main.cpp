@@ -1,4 +1,10 @@
 #include <Arduino.h>
+#include <Wifi.h>
+#include <WiFiClientSecure.h>
+
+#define ENABLE_SMTP
+#define ENABLE_DEBUG
+#include <ReadMail.h>
 
 // put function declarations here:
 int myFunction(int, int);
