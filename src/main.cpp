@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Wifi.h>
 #include <WiFiClientSecure.h>
+#include "../secretFolder/passwordFile.cpp"
 
 #define ENABLE_SMTP
 #define ENABLE_DEBUG
@@ -24,7 +25,7 @@ void setup() {
   smtp.connect("smtp.gmail.com", 465, statusCallback);
 
   if(smtp.isConnected()) {
-    smtp.authenticate("wholecelerywaterdishemail@gmail.com", "its app password", readymail_auth_password);
+    smtp.authenticate("wholecelerywaterdishemail@gmail.com", getPassword(), readymail_auth_password);
 
     SMTPMessage msg_Jacob;
     msg_Jacob.headers.add(rfc822_from, "DogDish wholecelerywaterdishemail@gmail.com");
