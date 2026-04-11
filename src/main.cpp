@@ -2,6 +2,7 @@
 #include <Wifi.h>
 #include <WiFiClientSecure.h>
 #include "HX711.h"
+#include "soc/rtc.h"
 #include "../secretFolder/passwordFile.cpp"
 
 #define ENABLE_SMTP
@@ -11,20 +12,20 @@
 WiFiClientSecure ssl_client;
 SMTPClient smtp(ssl_client);
 
-// 1. HX711 circuit wiring
-const int LOADCELL_DOUT_PIN = 2;
-const int LOADCELL_SCK_PIN = 3;
+// // 1. HX711 circuit wiring
+// const int LOADCELL_DOUT_PIN = 2;
+// const int LOADCELL_SCK_PIN = 3;
 
-// 2. Adjustment settings
-const long LOADCELL_OFFSET = 50682624;
-const long LOADCEL_DIVDER = 5895655;
+// // 2. Adjustment settings
+// const long LOADCELL_OFFSET = 50682624;
+// const long LOADCEL_DIVDER = 5895655;
 
 
 
 
 void setup() {
   Serial.begin(115200);
-  WiFi.begin("MY_SSID", "SSID_PASSWORD");
+  WiFi.begin("Release The Files", "moderncanoe313");
   while (WiFi.status() != WL_CONNECTED) delay(500);
 
   ssl_client.setInsecure();
@@ -43,14 +44,14 @@ void setup() {
     msg_Jacob.headers.add(rfc822_to, "Jacob 7159659801@tmomail.net");
     msg_Jacob.headers.add(rfc822_subject, "Olive in Drought");
     msg_Jacob.text.body("Olive needs water! She is dying *Palpatine Voice*");
-    msg_Jacob.html.body("<html><body><h1>Hello!</h1></body></html>");
+    // msg_Jacob.html.body("<html><body><h1>Hello!</h1></body></html>");
 
     SMTPMessage msg_Sophia;
     msg_Sophia.headers.add(rfc822_from, "DogDish wholecelerywaterdishemail@gmail.com");
     msg_Sophia.headers.add(rfc822_to, "Sophia 9125737@tmomail.net");
     msg_Sophia.headers.add(rfc822_subject, "Olive in Drought");
     msg_Sophia.text.body("Olive needs water! She is dying *Palpatine Voice*");
-    msg_Sophia.html.body("<html><body><h1>Hello!</h1></body></html>");
+    // msg_Sophia.html.body("<html><body><h1>Hello!</h1></body></html>");
 
     configTime(0, 0, "pool.ntp.org");
     while(time(nullptr) < 100000) delay(100);
