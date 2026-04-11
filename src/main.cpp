@@ -20,54 +20,66 @@ SMTPClient smtp(ssl_client);
 // const long LOADCELL_OFFSET = 50682624;
 // const long LOADCEL_DIVDER = 5895655;
 
+const char* ssid = "34_Felonies";
+const char* wifiPassword = "moderncanoe313";
+const char* emailAddress = "jacobbway1997@gmail.com"; // wholecelerywaterdishemail@gmail.com
 
+void initWiFi() {
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, wifiPassword);
+  Serial.print("Connecting to WiFi ..");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print('.');
+    delay(1000);
+  }
+  Serial.println(WiFi.localIP());
+}
 
-
-void setup() {
-  Serial.begin(115200);
-  WiFi.begin("Release The Files", "moderncanoe313");
-  while (WiFi.status() != WL_CONNECTED) delay(500);
-
+void sendEmail() {
   ssl_client.setInsecure();
 
   auto statusCallback = [](SMTPStatus status) {
     Serial.println(status.text);
   };
-
+  
   smtp.connect("smtp.gmail.com", 465, statusCallback);
 
   if(smtp.isConnected()) {
-    smtp.authenticate("wholecelerywaterdishemail@gmail.com", getPassword(), readymail_auth_password);
+    smtp.authenticate(emailAddress, getPassword(), readymail_auth_password);
 
     SMTPMessage msg_Jacob;
-    msg_Jacob.headers.add(rfc822_from, "DogDish wholecelerywaterdishemail@gmail.com");
-    msg_Jacob.headers.add(rfc822_to, "Jacob 7159659801@tmomail.net");
+    msg_Jacob.headers.add(rfc822_from, emailAddress);
+    msg_Jacob.headers.add(rfc822_to, "7159659201@tmomail.net");
     msg_Jacob.headers.add(rfc822_subject, "Olive in Drought");
-    msg_Jacob.text.body("Olive needs water! She is dying *Palpatine Voice*");
-    // msg_Jacob.html.body("<html><body><h1>Hello!</h1></body></html>");
+    msg_Jacob.text.body("Olive needs water!");
+    // msg_Jacob.html.body("<html><body><h1>Olive needs water!</h1></body></html>");
 
-    SMTPMessage msg_Sophia;
-    msg_Sophia.headers.add(rfc822_from, "DogDish wholecelerywaterdishemail@gmail.com");
-    msg_Sophia.headers.add(rfc822_to, "Sophia 9125737@tmomail.net");
-    msg_Sophia.headers.add(rfc822_subject, "Olive in Drought");
-    msg_Sophia.text.body("Olive needs water! She is dying *Palpatine Voice*");
-    // msg_Sophia.html.body("<html><body><h1>Hello!</h1></body></html>");
+    // SMTPMessage msg_Sophia;
+    // msg_Sophia.headers.add(rfc822_from, emailAddress);
+    // msg_Sophia.headers.add(rfc822_to, "9124095737@tmomail.net");
+    // msg_Sophia.headers.add(rfc822_subject, "Olive in Drought");
+    // msg_Sophia.text.body("Olive needs water!");
+    // msg_Sophia.html.body("<html><body><h1>Olive needs water!</h1></body></html>");
 
     configTime(0, 0, "pool.ntp.org");
     while(time(nullptr) < 100000) delay(100);
     msg_Jacob.timestamp = time(nullptr);
-    msg_Sophia.timestamp= time(nullptr);
+    // msg_Sophia.timestamp= time(nullptr);
 
     smtp.send(msg_Jacob);
-    smtp.send(msg_Sophia);
+    // smtp.send(msg_Sophia);
   }
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+
+void setup() {
+  Serial.begin(115200);
+  initWiFi();
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+/**
+ * this loop should run when the water dish reaches its threshold. then you have to hit the reset button to start again.
+ */
+void loop() {
+
 }
