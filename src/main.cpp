@@ -48,6 +48,8 @@ void loop(){
   static boolean newDataReady = 0;
   const int serialPrintInterval = 5000; // wait 5 seconds
 
+    LoadCell.powerUp();
+
   // check for new data/start next conversion:
   if (LoadCell.update()) newDataReady = true;
 
@@ -64,6 +66,8 @@ void loop(){
       t = millis();
     }
   }
+  LoadCell.powerDown(); // save me electricty
+  delay(3600000); // delay loop for an hour
 }
 
 void HX711Setup() {
