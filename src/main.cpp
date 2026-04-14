@@ -17,9 +17,10 @@
  **************************************/
 WiFiClientSecure ssl_client;
 SMTPClient smtp(ssl_client);
-const char* ssid = "34_Felonies";
-const char* wifiPassword = "moderncanoe313";
-const char* emailAddress = "jacobbway1997@gmail.com"; // wholecelerywaterdishemail@gmail.com
+const char* ssid = "34_Felonies"; // set to your SSID
+const char* wifiPassword = "moderncanoe313"; // set to your SSID password
+const char* emailAddress = "jacobbway1997@gmail.com"; // your email
+// const char* emailAddress1 = "wholecelerywaterdishemail@gmail.com";
 void initWiFi();
 void sendEmail();
 
@@ -48,9 +49,7 @@ void loop(){
   static boolean newDataReady = 0;
   const int serialPrintInterval = 5000; // wait 5 seconds
 
-    LoadCell.powerUp();
-
-  // check for new data/start next conversion:
+  // checks for new data. LoadCell.update() checks if the weight has changed
   if (LoadCell.update()) newDataReady = true;
 
   if (newDataReady) {
@@ -59,23 +58,29 @@ void loop(){
       Serial.print("Load_cell output val: ");
       Serial.println(i);
       if(i < lowerBound){
-        Serial.println("Water Dog");
-        // sendEmail();
+        if(!WiFi.status()) initWiFi(); // ensure I am still connected to WiFi if not reconnect
+        
+        sendEmail();
       }
       newDataReady = 0;
       t = millis();
     }
   }
-  LoadCell.powerDown(); // save me electricty
+
   delay(3600000); // delay loop for an hour
 }
 
+/**
+ * this is the sets up the HX711 object named LoadCell
+ * calibration factor is the raw reading from the scale divided by 
+ * a known weight. 
+ */
 void HX711Setup() {
   Serial.println("\n");
   Serial.println("Starting HX711...");
-  float calibrationValue = 763.17; // 763.17 = calibration factor without plate on it
+  float calibrationValue = 763.17; // calibration factor 
 
-  unsigned long stabilizingTime = 2000; // lets the precision improve by allowing more time for stabilizing
+  unsigned long stabilizingTime = 10000; // lets the precision improve by allowing more time for stabilizing
   boolean _tare = true;
   LoadCell.start(stabilizingTime, _tare);
 
@@ -89,6 +94,10 @@ void HX711Setup() {
   }
 }
 
+/**
+ * this function connects me to my wifi
+ * the WiFi library is a default library to Arduinio Library
+ */
 void initWiFi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, wifiPassword);
@@ -100,6 +109,18 @@ void initWiFi() {
   Serial.println(WiFi.localIP());
 }
 
+/**
+ * this function sends my email and is built from the Ready Mail library by mobizt
+ * https://github.com/mobizt/ReadyMail/tree/main
+ * 
+ * the getPassword() function is returning my App Password from my google account
+ * I have it in a file that isn't uploaded to my repo. because Security.
+ * 
+ * I have the ability to send two messages but the email to text service is extremely
+ * rate limited due to spammer abuse. Thats the main reason behind the hour wait period
+ * it only accepts about one email to text around every 3 hours
+ * 
+ */
 void sendEmail() {
   ssl_client.setInsecure();
 
@@ -107,24 +128,22 @@ void sendEmail() {
     Serial.println(status.text);
   };
   
-  smtp.connect("smtp.gmail.com", 465, statusCallback);
+  smtp.connect("smtp.gmail.com", 465, statusCallback); // validates the smtp server
 
   if(smtp.isConnected()) {
-    smtp.authenticate(emailAddress, getPassword(), readymail_auth_password);
+    smtp.authenticate(emailAddress, getPassword(), readymail_auth_password); // replace getPassword() with your google app password
 
     SMTPMessage msg_Jacob;
     msg_Jacob.headers.add(rfc822_from, emailAddress);
     msg_Jacob.headers.add(rfc822_to, "7159659201@tmomail.net");
     msg_Jacob.headers.add(rfc822_subject, "Olive in Drought");
     msg_Jacob.text.body("Olive needs water!");
-    // msg_Jacob.html.body("<html><body><h1>Olive needs water!</h1></body></html>");
 
     // SMTPMessage msg_Sophia;
     // msg_Sophia.headers.add(rfc822_from, emailAddress);
     // msg_Sophia.headers.add(rfc822_to, "9124095737@tmomail.net");
     // msg_Sophia.headers.add(rfc822_subject, "Olive in Drought");
     // msg_Sophia.text.body("Olive needs water!");
-    // msg_Sophia.html.body("<html><body><h1>Olive needs water!</h1></body></html>");
 
     configTime(0, 0, "pool.ntp.org");
     while(time(nullptr) < 100000) delay(100);
