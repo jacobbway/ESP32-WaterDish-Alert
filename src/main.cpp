@@ -8,6 +8,10 @@
 #define ENABLE_DEBUG
 #include <ReadyMail.h>
 
+#if defined(ESP8266)|| defined(ESP32) || defined(AVR)
+#include <EEPROM.h>
+#endif
+
 /**************************************
  *  WIFI and READY Mail Declarations
  **************************************/
@@ -35,29 +39,40 @@ void HX711Setup(); // function declaration
 
 void setup() {
     Serial.begin(57600);
+    LoadCell.begin();
     HX711Setup();
     initWiFi();
 }
 
-void loop() {
-    LoadCell.powerUp();
-    float value = LoadCell.getData();
-    if(value < lowerBound){
-        Serial.println(value);
-        //sendEmail();
+void loop(){
+  static boolean newDataReady = 0;
+  const int serialPrintInterval = 5000; // wait 5 seconds
+
+  // check for new data/start next conversion:
+  if (LoadCell.update()) newDataReady = true;
+
+  if (newDataReady) {
+    if (millis() > t + serialPrintInterval) {
+      float i = LoadCell.getData();
+      Serial.print("Load_cell output val: ");
+      Serial.println(i);
+      if(i < lowerBound){
+        Serial.println("Water Dog");
+        // sendEmail();
+      }
+      newDataReady = 0;
+      t = millis();
     }
-    LoadCell.powerDown();
-    delay(15000); // 15 seconds for test going to make it an hour in use // 3600000 is an hour
+  }
 }
 
 void HX711Setup() {
   Serial.println("\n");
   Serial.println("Starting HX711...");
-  LoadCell.begin();
   float calibrationValue = 763.17; // 763.17 = calibration factor without plate on it
 
   unsigned long stabilizingTime = 2000; // lets the precision improve by allowing more time for stabilizing
-  boolean _tare = false;
+  boolean _tare = true;
   LoadCell.start(stabilizingTime, _tare);
 
   if(LoadCell.getTareTimeoutFlag()) {
