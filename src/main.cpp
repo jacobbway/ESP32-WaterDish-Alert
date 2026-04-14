@@ -22,12 +22,11 @@ void setup(){
 
 void loop(){
   static boolean newDataReady = 0;
-  const int serialPrintInterval = 5000; //increase value to slow down serial print activity
+  const int serialPrintInterval = 5000; // wait 5 seconds
 
   // check for new data/start next conversion:
   if (LoadCell.update()) newDataReady = true;
 
-  // get smoothed value from the dataset:
   if (newDataReady) {
     if (millis() > t + serialPrintInterval) {
       float i = LoadCell.getData();
