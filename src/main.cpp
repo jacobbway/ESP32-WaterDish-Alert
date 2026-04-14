@@ -3,17 +3,17 @@
 #include "HX711.h"
 
 // 1. HX711 circuit wiring // these are the GPIOs on my esp32 
-const int LOADCELL_DOUT_PIN = 16;
-const int LOADCELL_SCK_PIN = 3;
+const int LOADCELL_DOUT_PIN = 46;
+const int LOADCELL_SCK_PIN = 16;
 
-// 2. Adjustment settings
-const long LOADCELL_OFFSET = 50682624;
-const long LOADCEL_DIVDER = 5895655;
+// // 2. Adjustment settings
+// const long LOADCELL_OFFSET = 50682624;
+// const long LOADCEL_DIVDER = 5895655;
 
 // 3. Known Weight and known weight reading
-const double knownWeight = 70; // 70 grams
-const long knownReading = 0; // needs to be set once I have the reading.
-const long calibrationFactor = knownReading / knownWeight;
+// const double knownWeight = 70; // 70 grams
+// const long knownReading = 0; // needs to be set once I have the reading.
+// const long calibrationFactor = knownReading / knownWeight;
 
 HX711 scale;
 
@@ -27,6 +27,7 @@ HX711 scale;
 
 void setup() {
     Serial.begin(115200);
+    Serial.println("hello 1");
     rtc_cpu_freq_config_t config;
     rtc_clk_cpu_freq_get_config(&config);
     rtc_clk_cpu_freq_mhz_to_config(RTC_CPU_FREQ_80M, &config);
@@ -38,7 +39,7 @@ void setup() {
  * Calibration Loop needed for intial setup
  */
 void loop() {
-
+  Serial.println("hello");
   if (scale.is_ready()) {
     scale.set_scale();    
     Serial.println("Tare... remove any weights from the scale.");
@@ -60,6 +61,6 @@ void loop() {
 /**
  * Test loop
  */
-void loop() {
-    delay(3600000); // delay 1 hour
-}
+// void loop() {
+//     delay(3600000); // delay 1 hour
+// }
