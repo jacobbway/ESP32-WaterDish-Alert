@@ -29,10 +29,14 @@ void loop(){
 
   if (newDataReady) {
     if (millis() > t + serialPrintInterval) {
-      float i = LoadCell.getData();
+      int avgVal = 0;
+      for(int j = 0; j < 20; j++){
+        avgVal += LoadCell.getData();
+      }
+      avgVal = avgVal / 20;
       Serial.print("Load_cell output val: ");
-      Serial.println(i);
-      if(i < lowerBound){
+      Serial.println(avgVal);
+      if(avgVal < lowerBound){
         Serial.println("Water Dog");
       }
       newDataReady = 0;
