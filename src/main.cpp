@@ -3,7 +3,7 @@
 #include <WiFiClientSecure.h>
 #include "HX711.h"
 #include "soc/rtc.h"
-#include "../secretFolder/passwordFile.cpp"
+#include "../secretFolder/password.cpp"
 
 #define ENABLE_SMTP
 #define ENABLE_DEBUG
