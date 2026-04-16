@@ -53,10 +53,14 @@ void loop(){
 
   if (newDataReady) {
     if (millis() > t + serialPrintInterval) {
-      float i = LoadCell.getData();
+      int avgVal = 0;
+      for(int i = 0; i < 20; i++){
+        avgVal += LoadCell.getData();
+      }
+      avgVal = avgVal / 20;
       Serial.print("Load_cell output val: ");
-      Serial.println(i);
-      if(i < lowerBound){
+      Serial.println(avgVal);
+      if(avgVal < lowerBound){
         if(!WiFi.status()) initWiFi(); // ensure I am still connected to WiFi if not reconnect
         sendEmail();
       }
