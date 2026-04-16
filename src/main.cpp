@@ -37,7 +37,6 @@ const float lowerBound = 62; // this is oh the water dish is empty weight
 void HX711Setup(); // function declaration
 
 
-
 void setup() {
     Serial.begin(57600);
     LoadCell.begin();
@@ -131,7 +130,7 @@ void sendEmail() {
   smtp.connect("smtp.gmail.com", 465, statusCallback); // validates the smtp server
 
   if(smtp.isConnected()) {
-    smtp.authenticate(emailAddress, getPassword(), readymail_auth_password); // replace getPassword() with your google app password
+    smtp.authenticate(emailAddress, getPassword1(), readymail_auth_password); // replace getPassword() with your google app password
 
     SMTPMessage msg_Jacob;
     msg_Jacob.headers.add(rfc822_from, emailAddress);
