@@ -135,7 +135,7 @@ void sendEmail() {
 
     SMTPMessage msg_Jacob;
     msg_Jacob.headers.add(rfc822_from, emailAddress);
-    msg_Jacob.headers.add(rfc822_to, "7159659201@tmomail.net");
+    msg_Jacob.headers.add(rfc822_to, getPhoneNumber() + "@tmomail.net");
     msg_Jacob.headers.add(rfc822_subject, "Olive in Drought");
     msg_Jacob.text.body("Olive needs water!");
 
