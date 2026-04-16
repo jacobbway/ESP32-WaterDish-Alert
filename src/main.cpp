@@ -46,7 +46,7 @@ void setup() {
 
 void loop(){
   static boolean newDataReady = 0;
-  const int serialPrintInterval = 5000; // wait 5 seconds
+  const int serialPrintInterval = 3600000; // wait 1 hour
 
   // checks for new data. LoadCell.update() checks if the weight has changed
   if (LoadCell.update()) newDataReady = true;
@@ -68,8 +68,6 @@ void loop(){
       t = millis();
     }
   }
-
-  delay(3600000); // delay loop for an hour
 }
 
 /**
