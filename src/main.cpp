@@ -58,7 +58,6 @@ void loop(){
       Serial.println(i);
       if(i < lowerBound){
         if(!WiFi.status()) initWiFi(); // ensure I am still connected to WiFi if not reconnect
-        
         sendEmail();
       }
       newDataReady = 0;
