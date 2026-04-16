@@ -139,12 +139,6 @@ void sendEmail() {
     msg_Jacob.headers.add(rfc822_subject, "Olive in Drought");
     msg_Jacob.text.body("Olive needs water!");
 
-    // SMTPMessage msg_Sophia;
-    // msg_Sophia.headers.add(rfc822_from, emailAddress);
-    // msg_Sophia.headers.add(rfc822_to, "9124095737@tmomail.net");
-    // msg_Sophia.headers.add(rfc822_subject, "Olive in Drought");
-    // msg_Sophia.text.body("Olive needs water!");
-
     configTime(0, 0, "pool.ntp.org");
     while(time(nullptr) < 100000) delay(100);
     msg_Jacob.timestamp = time(nullptr);
