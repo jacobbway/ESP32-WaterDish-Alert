@@ -12,5 +12,5 @@ https://github.com/olkal/HX711_ADC
 # Next Steps
 I need to find a new way to convert my emails to text better, the service provided by T-Mobile only allows about one email-to-text to pass through about once every four hours or so. Or I drop the email to text thing and have it just send emails. Another option would be building an app that notifies me or something.
 
-# Currently Working
+# Currently Working On
 I am currently designing a structure in AutoCad that will house my setup all in one. I am hoping to include a place to mount the esp32/hx711/load cell as well as battery powered setup for the system that way I don't have to have it plugging into the wall.
