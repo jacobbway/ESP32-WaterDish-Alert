@@ -53,6 +53,7 @@ void loop(){
 
   if (newDataReady) {
     if (millis() > t + serialPrintInterval) {
+      Serial.println("Its been an hour");
       int avgVal = 0;
       for(int i = 0; i < 20; i++){
         avgVal += LoadCell.getData();
@@ -61,6 +62,7 @@ void loop(){
       Serial.print("Load_cell output val: ");
       Serial.println(avgVal);
       if(avgVal < lowerBound){
+        Serial.println("water olive");
         if(!WiFi.status()) initWiFi(); // ensure I am still connected to WiFi if not reconnect
         sendEmail();
       }
